@@ -8,11 +8,11 @@
     android:paddingLeft="@dimen/acitivity_10dp_margin"
     android:paddingRight="@dimen/acitivity_10dp_margin"
     android:paddingTop="@dimen/acitivity_5dp_margin"
-    tools:context="com.alvin.cataloguemovie.MainActivity">
+    tools:context="com.alvin.cataloguemovie.SearchableActivity">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_movie"
+        android:id="@+id/recycler_search_movie"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"/>
 
 </LinearLayout>

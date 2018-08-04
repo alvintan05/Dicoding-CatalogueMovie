@@ -1,3 +1,26 @@
 <resources>
     <string name="app_name">CatalogueMovie</string>
+
+    // Detail Activity
+    <string name="detail_movie_title">Movie_Title</string>
+    <string name="detail_release_year">Release_Year</string>
+    <string name="detail_tagline">TagLine</string>
+    <string name="detail_rate">0.0</string>
+    <string name="detail_overview">Overview</string>
+    <string name="detail_movie_description">Movie Description</string>
+    <string name="detail_title_status">Status</string>
+    <string name="detail_title_release_date">Release Date</string>
+    <string name="detail_title_original_language">Original Language</string>
+    <string name="detail_title_runtime">Runtime</string>
+    <string name="detail_release_status">release_status</string>
+    <string name="detail_release_date">Release_date</string>
+    <string name="detail_language">Language</string>
+    <string name="detail_runtime">000 mins</string>
+    <string name="detail_title_homepage">Homepage</string>
+    <string name="detail_homepage_url">HomePage</string>
+
+    // Menu Search
+    <string name="action_search">Action Search</string>
+    <string name="searchable_search_movie">Search Movies</string>
+
 </resources>
