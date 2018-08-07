@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CatalogueMovie</string>
+    <string name="app_name">Movie Catalogue</string>
 
     // Detail Activity
     <string name="detail_movie_title">Movie_Title</string>
@@ -17,10 +17,11 @@
     <string name="detail_language">Language</string>
     <string name="detail_runtime">000 mins</string>
     <string name="detail_title_homepage">Homepage</string>
-    <string name="detail_homepage_url">HomePage</string>
+    <string name="detail_homepage_url">https://www.google.com</string>
 
     // Menu Search
     <string name="action_search">Action Search</string>
     <string name="searchable_search_movie">Search Movies</string>
+    <string name="close">Close</string>
 
 </resources>

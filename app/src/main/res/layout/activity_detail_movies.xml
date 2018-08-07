@@ -18,7 +18,7 @@
             android:layout_height="256dp"
             android:fitsSystemWindows="true"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:contentScrim="@color/colorPrimary"
+            app:contentScrim="#E67E22"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <RelativeLayout
@@ -87,7 +87,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/detail_release_year"
                         android:textColor="#fff"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -310,6 +310,10 @@
                         android:textStyle="bold" />
 
                     <TextView
+                        android:autoLink="all"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:textColorLink="@color/colorPrimary"
                         android:id="@+id/detail_movie_homepage"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

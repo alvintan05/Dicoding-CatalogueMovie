@@ -13,10 +13,13 @@ import android.widget.TextView;
 
 import com.alvin.cataloguemovie.BuildConfig;
 import com.alvin.cataloguemovie.DetailMoviesActivity;
-import com.alvin.cataloguemovie.Model.Popular.PopularMovieResult;
+import com.alvin.cataloguemovie.Model.Movies.MovieResult;
 import com.alvin.cataloguemovie.R;
 import com.bumptech.glide.Glide;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -34,9 +37,9 @@ public class RecyclerMovieAdapter extends RecyclerView.Adapter<RecyclerMovieAdap
 
     private final static String IMAGE_BASE_URL = BuildConfig.IMAGE_BASE_URL;
 
-    private List<PopularMovieResult> moviesItem;
+    private List<MovieResult> moviesItem;
 
-    public RecyclerMovieAdapter(Context mContext, List<PopularMovieResult> moviesItem) {
+    public RecyclerMovieAdapter(Context mContext, List<MovieResult> moviesItem) {
         this.mContext = mContext;
         this.moviesItem = moviesItem;
     }
@@ -65,7 +68,7 @@ public class RecyclerMovieAdapter extends RecyclerView.Adapter<RecyclerMovieAdap
 
         holder.tvMovieTitle.setText(moviesItem.get(position).getMovieTitle());
         holder.tvMovieDescription.setText(moviesItem.get(position).getMovieDescription());
-        holder.tvMovieDate.setText(moviesItem.get(position).getMovieReleaseDate());
+        holder.tvMovieDate.setText(dateFormat(moviesItem.get(position).getMovieReleaseDate()));
 
         holder.parentMovieCard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,6 +106,24 @@ public class RecyclerMovieAdapter extends RecyclerView.Adapter<RecyclerMovieAdap
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+    }
+
+    private String dateFormat(String oldDate) {
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date myDate = null;
+        try {
+            myDate = dateFormat.parse(oldDate);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        SimpleDateFormat newFormat = new SimpleDateFormat("EEEE, MMM dd, yyyy");
+        String finalDate = newFormat.format(myDate);
+
+        return finalDate;
+
     }
 
 }

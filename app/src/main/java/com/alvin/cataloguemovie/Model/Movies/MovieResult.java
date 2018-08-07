@@ -1,4 +1,4 @@
-package com.alvin.cataloguemovie.Model.Popular;
+package com.alvin.cataloguemovie.Model.Movies;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -9,7 +9,7 @@ import java.util.List;
  * Created by Alvin Tandiardi on 31/07/2018.
  */
 
-public class PopularMovieResult {
+public class MovieResult {
 
     @SerializedName("vote_count")
     @Expose

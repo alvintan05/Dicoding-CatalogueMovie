@@ -1,7 +1,7 @@
 package com.alvin.cataloguemovie;
 
+import android.app.ProgressDialog;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,30 +10,39 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alvin.cataloguemovie.Retrofit.ApiClient;
-import com.alvin.cataloguemovie.Retrofit.OnGetMoviesDetail;
 import com.alvin.cataloguemovie.Model.Detail.DetailMovie;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class DetailMoviesActivity extends AppCompatActivity {
 
     private static final String TAG = "DetailMoviesActivity";
 
-    private int mutedColor = R.attr.colorPrimary;
-
+    private static final String IMAGE_BASE_URL = BuildConfig.IMAGE_BASE_URL;
+    private static final String API_KEY = BuildConfig.API_KEY;
     public static String MOVIE_ID = "movie_id";
 
     private int movie_id;
+    private int mutedColor = R.attr.colorPrimary;
+    private ProgressDialog mProgress;
 
-    private static final String IMAGE_BASE_URL = BuildConfig.IMAGE_BASE_URL;
-
-    private ApiClient apiClient;
+    private ApiClient apiClient = null;
+    private Call<DetailMovie> detailMovieCall;
+    private DetailMovie detailMovie;
 
     @BindView(R.id.tb)
     Toolbar tb;
@@ -83,6 +92,10 @@ public class DetailMoviesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail_movies);
         ButterKnife.bind(this);
 
+        apiClient = ApiClient.getInstance();
+
+        mProgress = new ProgressDialog(this);
+
         setSupportActionBar(tb);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -92,80 +105,89 @@ public class DetailMoviesActivity extends AppCompatActivity {
 
         Log.d(TAG, "onCreate: " + movie_id);
 
-        apiClient = ApiClient.getInstance();
-
         getDetailMovie();
-
     }
 
     private void getDetailMovie() {
-        apiClient.getDetailMovies(movie_id, new OnGetMoviesDetail() {
+        mProgress.setMessage("Loading");
+        mProgress.show();
+        detailMovieCall = apiClient.getApi().getDetailMovies(movie_id, API_KEY);
+        detailMovieCall.enqueue(new Callback<DetailMovie>() {
             @Override
-            public void onSuccessDetail(DetailMovie detailMovies) {
+            public void onResponse(Call<DetailMovie> call, Response<DetailMovie> response) {
 
-                String poster_url = IMAGE_BASE_URL + "w342" + detailMovies.getPosterPath();
-                String backdrop_url = IMAGE_BASE_URL + "w500" + detailMovies.getBackdropPath();
+                if (response.isSuccessful()) {
+                    detailMovie = response.body();
 
-                movieTitleBig.setText(detailMovies.getTitle());
-                movieYear.setText(detailMovies.getReleaseDate().split("-")[0]);
+                    mProgress.dismiss();
 
-                //buat set apabila taglinenya kosong
-                if (!detailMovies.getTagline().isEmpty()) {
-                    movieTagline.setText("\"" + detailMovies.getTagline() + "\"");
-                } else {
-                    movieTagline.setText(" ");
+                    String poster_url = IMAGE_BASE_URL + "w342" + detailMovie.getPosterPath();
+                    String backdrop_url = IMAGE_BASE_URL + "w780" + detailMovie.getBackdropPath();
+
+                    movieTitleBig.setText(detailMovie.getTitle());
+                    movieYear.setText(detailMovie.getReleaseDate().split("-")[0]);
+
+                    //buat set apabila taglinenya kosong
+                    if (!detailMovie.getTagline().isEmpty()) {
+                        movieTagline.setText("\"" + detailMovie.getTagline() + "\"");
+                    } else {
+                        movieTagline.setText("No Tagline");
+                    }
+
+                    movieRate.setText(detailMovie.getVoteAverage().toString());
+                    movieReleaseStatus.setText(detailMovie.getStatus());
+                    movieReleaseDate.setText(dateFormat(detailMovie.getReleaseDate()));
+                    movieRuntime.setText(detailMovie.getRuntime() + " mins");
+                    movieOverview.setText(detailMovie.getOverview());
+                    movieLanguage.setText(detailMovie.getOriginalLanguage());
+                    movieHomepage.setText(detailMovie.getHomepage());
+
+                    Glide.with(getApplicationContext())
+                            .load(poster_url)
+                            .placeholder(R.drawable.example)
+                            .error(R.drawable.example)
+                            .crossFade()
+                            .into(imgPoster);
+
+                    Glide.with(getApplicationContext())
+                            .load(backdrop_url)
+                            .placeholder(R.drawable.example_backdrop)
+                            .error(R.drawable.example_backdrop)
+                            .crossFade()
+                            .into(imgBackdrop);
+
+                    //set title toolbar sesuai judul
+                    ctl.setTitle(detailMovie.getTitle());
+
+                    // mengubah gambar poster menjadi bitmap
+                    int myWidth = 600;
+                    int myHeight = 900;
+
+                    Glide.with(getApplicationContext())
+                            .load(poster_url)
+                            .asBitmap()
+                            .into(new SimpleTarget<Bitmap>(myWidth, myHeight) {
+                                @Override
+                                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                    // mengekstrak warna dari gambar yang digunakan
+                                    Palette.from(resource).generate(new Palette.PaletteAsyncListener() {
+                                        @Override
+                                        public void onGenerated(Palette palette) {
+                                            mutedColor = palette.getMutedColor(R.attr.colorPrimary);
+                                            ctl.setContentScrimColor(mutedColor);
+                                        }
+                                    });
+                                }
+                            });
+
                 }
 
-                movieRate.setText(detailMovies.getVoteAverage().toString());
-                movieReleaseStatus.setText(detailMovies.getStatus());
-                movieReleaseDate.setText(detailMovies.getReleaseDate());
-                movieRuntime.setText(detailMovies.getRuntime() + " mins");
-                movieOverview.setText(detailMovies.getOverview());
-                movieHomepage.setText(detailMovies.getHomepage());
-
-                Glide.with(getApplicationContext())
-                        .load(poster_url)
-                        .placeholder(R.drawable.example)
-                        .error(R.drawable.example)
-                        .crossFade()
-                        .into(imgPoster);
-
-                Glide.with(getApplicationContext())
-                        .load(backdrop_url)
-                        .placeholder(R.drawable.example_backdrop)
-                        .error(R.drawable.example_backdrop)
-                        .crossFade()
-                        .into(imgBackdrop);
-
-                //set title toolbar sesuai judul
-                ctl.setTitle(detailMovies.getTitle());
-
-                // mengubah gambar poster menjadi bitmap
-                int myWidth = 600;
-                int myHeight = 900;
-
-                Glide.with(getApplicationContext())
-                        .load(poster_url)
-                        .asBitmap()
-                        .into(new SimpleTarget<Bitmap>(myWidth, myHeight) {
-                            @Override
-                            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                                // mengekstrak warna dari gambar yang digunakan
-                                Palette.from(resource).generate(new Palette.PaletteAsyncListener() {
-                                    @Override
-                                    public void onGenerated(Palette palette) {
-                                        mutedColor = palette.getDarkVibrantColor(R.attr.colorPrimary);
-                                        ctl.setContentScrimColor(mutedColor);
-                                    }
-                                });
-                            }
-                        });
 
             }
 
             @Override
-            public void onError() {
-
+            public void onFailure(Call<DetailMovie> call, Throwable t) {
+                Toast.makeText(DetailMoviesActivity.this, "Failed", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -174,6 +196,24 @@ public class DetailMoviesActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    private String dateFormat(String oldDate) {
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date myDate = null;
+        try {
+            myDate = dateFormat.parse(oldDate);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        SimpleDateFormat newFormat = new SimpleDateFormat("MMMM dd, yyyy");
+        String finalDate = newFormat.format(myDate);
+
+        return finalDate;
+
     }
 
 }

@@ -13,10 +13,13 @@ import android.widget.TextView;
 
 import com.alvin.cataloguemovie.BuildConfig;
 import com.alvin.cataloguemovie.DetailMoviesActivity;
-import com.alvin.cataloguemovie.Model.Search.SearchMovieResult;
+import com.alvin.cataloguemovie.Model.Movies.MovieResult;
 import com.alvin.cataloguemovie.R;
 import com.bumptech.glide.Glide;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -34,16 +37,16 @@ public class RecyclerSearchAdapter extends RecyclerView.Adapter<RecyclerSearchAd
 
     private Context mContext;
 
-    private List<SearchMovieResult> searchMovieResults;
+    private List<MovieResult> searchMovieResults;
 
-    public RecyclerSearchAdapter(Context mContext, List<SearchMovieResult> searchMovieResults) {
+    public RecyclerSearchAdapter(Context mContext, List<MovieResult> searchMovieResults) {
         this.mContext = mContext;
         this.searchMovieResults = searchMovieResults;
     }
 
     @Override
     public SearchViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_search_movie_list, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_movie_list, parent, false);
         SearchViewHolder holder = new SearchViewHolder(view);
         return holder;
     }
@@ -53,9 +56,9 @@ public class RecyclerSearchAdapter extends RecyclerView.Adapter<RecyclerSearchAd
 
         Log.d(TAG, "onBindViewHolder: called");
 
-        String poster_url = IMAGE_BASE_URL + "w185" + searchMovieResults.get(position).getPosterPath();
+        String poster_url = IMAGE_BASE_URL + "w185" + searchMovieResults.get(position).getMoviePosterPath();
 
-        final int movie_id = searchMovieResults.get(position).getId();
+        final int movie_id = searchMovieResults.get(position).getMovieId();
 
         Log.d(TAG, "url image : " + poster_url);
 
@@ -64,9 +67,12 @@ public class RecyclerSearchAdapter extends RecyclerView.Adapter<RecyclerSearchAd
                 .error(R.drawable.example)
                 .into(holder.imgMoviePoster);
 
-        holder.tvMovieTitle.setText(searchMovieResults.get(position).getTitle());
-        holder.tvMovieDescription.setText(searchMovieResults.get(position).getOverview());
-        holder.tvMovieDate.setText(searchMovieResults.get(position).getReleaseDate());
+        holder.tvMovieTitle.setText(searchMovieResults.get(position).getMovieTitle());
+        holder.tvMovieDescription.setText(searchMovieResults.get(position).getMovieDescription());
+
+        if (searchMovieResults.get(position).getMovieReleaseDate() != null) {
+            holder.tvMovieDate.setText(dateFormat(searchMovieResults.get(position).getMovieReleaseDate()));
+        }
 
         holder.parentMovieCard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,6 +111,22 @@ public class RecyclerSearchAdapter extends RecyclerView.Adapter<RecyclerSearchAd
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+    }
+
+    private String dateFormat(String oldDate) {
+        String finalDate = null;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date myDate = null;
+        try {
+            myDate = dateFormat.parse(oldDate);
+            SimpleDateFormat newFormat = new SimpleDateFormat("EEEE, MMM dd, yyyy");
+            finalDate = newFormat.format(myDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        
+        return finalDate;
+
     }
 
 }

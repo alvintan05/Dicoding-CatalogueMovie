@@ -1,4 +1,5 @@
-package com.alvin.cataloguemovie.Model.Popular;
+package com.alvin.cataloguemovie.Model.Movies;
+
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -9,23 +10,20 @@ import java.util.List;
  * Created by Alvin Tandiardi on 31/07/2018.
  */
 
-public class PopularMovieResponse {
+public class MovieResponse {
 
     @SerializedName("page")
     @Expose
     private Integer page;
-
     @SerializedName("total_results")
     @Expose
     private Integer totalResults;
-
     @SerializedName("total_pages")
     @Expose
     private Integer totalPages;
-
     @SerializedName("results")
     @Expose
-    private List<PopularMovieResult> moviesItem;
+    private List<MovieResult> MovieResults = null;
 
     public Integer getPage() {
         return page;
@@ -51,16 +49,18 @@ public class PopularMovieResponse {
         this.totalPages = totalPages;
     }
 
-
-    public List<PopularMovieResult> getMoviesItem() {
-        return moviesItem;
+    public List<MovieResult> getMovieResults() {
+        return MovieResults;
     }
 
-    public void setMoviesItem(List<PopularMovieResult> moviesItem) {
-        this.moviesItem = moviesItem;
+    public void setMovieResults(List<MovieResult> movieResults) {
+        MovieResults = movieResults;
     }
 
-    public PopularMovieResponse(List<PopularMovieResult> moviesItem) {
-        this.moviesItem = moviesItem;
+    public MovieResponse(Integer page, Integer totalResults, Integer totalPages, List<MovieResult> movieResults) {
+        this.page = page;
+        this.totalResults = totalResults;
+        this.totalPages = totalPages;
+        MovieResults = movieResults;
     }
 }
