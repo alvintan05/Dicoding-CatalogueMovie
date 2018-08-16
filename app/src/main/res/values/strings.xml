@@ -2,26 +2,38 @@
     <string name="app_name">Movie Catalogue</string>
 
     // Detail Activity
-    <string name="detail_movie_title">Movie_Title</string>
-    <string name="detail_release_year">Release_Year</string>
-    <string name="detail_tagline">TagLine</string>
-    <string name="detail_rate">0.0</string>
     <string name="detail_overview">Overview</string>
-    <string name="detail_movie_description">Movie Description</string>
     <string name="detail_title_status">Status</string>
     <string name="detail_title_release_date">Release Date</string>
     <string name="detail_title_original_language">Original Language</string>
     <string name="detail_title_runtime">Runtime</string>
-    <string name="detail_release_status">release_status</string>
-    <string name="detail_release_date">Release_date</string>
-    <string name="detail_language">Language</string>
-    <string name="detail_runtime">000 mins</string>
     <string name="detail_title_homepage">Homepage</string>
-    <string name="detail_homepage_url">https://www.google.com</string>
 
     // Menu Search
     <string name="action_search">Action Search</string>
     <string name="searchable_search_movie">Search Movies</string>
     <string name="close">Close</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    // Menu Navigation Drawer
+    <string name="home">Home</string>
+    <string name="change_language">Change Language</string>
+    <string name="settings">Settings</string>
+
+    // Tab Name
+    <string name="tab_popular">POPULAR</string>
+    <string name="tab_now_playing">NOW PLAYING</string>
+    <string name="tab_upcoming">UPCOMING</string>
+
+    // Toast
+    <string name="toast_empty">Empty</string>
+    <string name="toast_failed">Failed</string>
+    <string name="toast_not_found">Movie not found</string>
+
+    <string name="progress_loading">Loading</string>
+    <string name="minute">\u0020mins</string>
+    <string name="no_tagline">No Tagline</string>
 
 </resources>

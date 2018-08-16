@@ -15,7 +15,7 @@ import retrofit2.http.Query;
 public interface ApiMovieInterface {
 
     @GET("movie/popular")
-    Call<MovieResponse> getPopularMovies(@Query("api_key") String apiKey, @Query("language") String language, @Query("page") int page);
+    Call<MovieResponse> getPopularMovies(@Query("api_key") String apiKey, @Query("language") String language, @Query("page") int page, @Query("region") String region);
 
     @GET("movie/{movie_id}")
     Call<DetailMovie> getDetailMovies(@Path("movie_id") int movie_id, @Query("api_key") String apiKey);
@@ -23,4 +23,9 @@ public interface ApiMovieInterface {
     @GET("search/movie")
     Call<MovieResponse> getSearchMovies(@Query("api_key") String apiKey, @Query("language") String language, @Query("query") String querySearch);
 
+    @GET("movie/now_playing")
+    Call<MovieResponse> getNowPlayingMovies(@Query("api_key") String apiKey, @Query("language") String language, @Query("page") int page, @Query("region") String region);
+
+    @GET("movie/upcoming")
+    Call<MovieResponse> getUpcomingMovies(@Query("api_key") String apiKey, @Query("language") String language, @Query("page") int page, @Query("region") String region);
 }

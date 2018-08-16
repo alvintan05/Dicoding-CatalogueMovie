@@ -67,7 +67,7 @@ public class SearchableActivity extends AppCompatActivity {
         ab.setDisplayHomeAsUpEnabled(true);
 
         mProgress = new ProgressDialog(this);
-        mProgress.setMessage("Loading");
+        mProgress.setMessage(getString(R.string.progress_loading));
 
         getSearchResult();
 
@@ -91,7 +91,7 @@ public class SearchableActivity extends AppCompatActivity {
                         }
 
                         if (movieResults.size() == 0) {
-                            Toast.makeText(SearchableActivity.this, "Movie not found", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SearchableActivity.this, R.string.toast_not_found, Toast.LENGTH_SHORT).show();
                         }
 
                     }
@@ -99,7 +99,7 @@ public class SearchableActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<MovieResponse> call, Throwable t) {
-                    Toast.makeText(SearchableActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SearchableActivity.this, R.string.toast_failed, Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -117,7 +117,7 @@ public class SearchableActivity extends AppCompatActivity {
                             recyclerViewSearch.setLayoutManager(new LinearLayoutManager(SearchableActivity.this));
                         }
                         if (movieResults.size() == 0) {
-                            Toast.makeText(SearchableActivity.this, "Movie not found", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SearchableActivity.this, R.string.toast_not_found, Toast.LENGTH_SHORT).show();
                         }
 
                     }
@@ -125,7 +125,7 @@ public class SearchableActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<MovieResponse> call, Throwable t) {
-                    Toast.makeText(SearchableActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SearchableActivity.this, R.string.toast_failed, Toast.LENGTH_SHORT).show();
                 }
             });
         }

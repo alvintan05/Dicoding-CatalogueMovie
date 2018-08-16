@@ -76,7 +76,7 @@
                         android:id="@+id/detail_movie_title_1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/detail_movie_title"
+                        tools:text="Movie_Title"
                         android:textColor="#fff"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -85,7 +85,7 @@
                         android:id="@+id/detail_movie_year"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/detail_release_year"
+                        tools:text="Release_year"
                         android:textColor="#fff"
                         android:textSize="14sp"
                         android:textStyle="bold" />
@@ -96,7 +96,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/acitivity_5dp_margin"
                         android:layout_marginTop="@dimen/acitivity_5dp_margin"
-                        android:text="@string/detail_tagline"
+                        tools:text="Tagline"
                         android:textColor="#fff"
                         android:textStyle="italic" />
 
@@ -121,7 +121,7 @@
                             android:layout_toEndOf="@+id/ic_star"
                             android:layout_toRightOf="@+id/ic_star"
                             android:gravity="center_vertical"
-                            android:text="@string/detail_rate"
+                            tools:text="0.0"
                             android:textColor="#fff"
                             android:textSize="17sp" />
 
@@ -183,7 +183,7 @@
                         android:id="@+id/detail_movie_overview"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/detail_movie_description" />
+                        tools:text="Movie Description" />
 
                 </LinearLayout>
 
@@ -257,28 +257,28 @@
                             android:id="@+id/detail_movie_status"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/detail_release_status" />
+                            tools:text="release_status" />
 
                         <TextView
                             android:id="@+id/detail_movie_date"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="3dp"
-                            android:text="@string/detail_release_date" />
+                            tools:text="Release_date" />
 
                         <TextView
                             android:id="@+id/detail_movie_language"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="3dp"
-                            android:text="@string/detail_language" />
+                            tools:text="Language" />
 
                         <TextView
                             android:id="@+id/detail_movie_runtime"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="3dp"
-                            android:text="@string/detail_runtime" />
+                            tools:text="000 mins" />
 
                     </LinearLayout>
 
@@ -317,7 +317,7 @@
                         android:id="@+id/detail_movie_homepage"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/detail_homepage_url" />
+                        tools:text="https://www.google.com" />
 
                 </LinearLayout>
 

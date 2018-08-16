@@ -26,22 +26,22 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Created by Alvin Tandiardi on 31/07/2018.
+ * Created by Alvin Tandiardi on 15/08/2018.
  */
 
-public class RecyclerMovieAdapter extends RecyclerView.Adapter<RecyclerMovieAdapter.ViewHolder> {
+public class RecyclerUpcomingAdapter extends RecyclerView.Adapter<RecyclerUpcomingAdapter.ViewHolder> {
 
-    private static final String TAG = "RecyclerMovieAdapter";
+    private static final String TAG = "RecyclerUpcomingAdapter";
 
-    private Context mContext;
+    private Context context;
 
     private final static String IMAGE_BASE_URL = BuildConfig.IMAGE_BASE_URL;
 
-    private List<MovieResult> moviesItem;
+    private List<MovieResult> upcomingMovies;
 
-    public RecyclerMovieAdapter(Context mContext, List<MovieResult> moviesItem) {
-        this.mContext = mContext;
-        this.moviesItem = moviesItem;
+    public RecyclerUpcomingAdapter(Context context, List<MovieResult> upcomingMovies) {
+        this.context = context;
+        this.upcomingMovies = upcomingMovies;
     }
 
     @Override
@@ -52,37 +52,36 @@ public class RecyclerMovieAdapter extends RecyclerView.Adapter<RecyclerMovieAdap
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(ViewHolder holder, int position) {
+
         Log.d(TAG, "onBindViewHolder: called");
 
-        String poster_url = IMAGE_BASE_URL + "w185" + moviesItem.get(position).getMoviePosterPath();
+        String poster_url = IMAGE_BASE_URL + "w185" + upcomingMovies.get(position).getMoviePosterPath();
 
-        final int movie_id = moviesItem.get(position).getMovieId();
+        final int movie_id = upcomingMovies.get(position).getMovieId();
 
-        Log.d(TAG, "url image : " + poster_url);
-
-        Glide.with(mContext.getApplicationContext())
+        Glide.with(context)
                 .load(poster_url)
-                .error(R.drawable.example)
                 .into(holder.imgMoviePoster);
 
-        holder.tvMovieTitle.setText(moviesItem.get(position).getMovieTitle());
-        holder.tvMovieDescription.setText(moviesItem.get(position).getMovieDescription());
-        holder.tvMovieDate.setText(dateFormat(moviesItem.get(position).getMovieReleaseDate()));
+        holder.tvMovieTitle.setText(upcomingMovies.get(position).getMovieTitle());
+        holder.tvMovieDescription.setText(upcomingMovies.get(position).getMovieDescription());
+        holder.tvMovieDate.setText(dateFormat(upcomingMovies.get(position).getMovieReleaseDate()));
 
         holder.parentMovieCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent movieIdIntent = new Intent(mContext, DetailMoviesActivity.class);
+                Intent movieIdIntent = new Intent(context, DetailMoviesActivity.class);
                 movieIdIntent.putExtra(DetailMoviesActivity.MOVIE_ID, movie_id);
-                mContext.startActivity(movieIdIntent);
+                context.startActivity(movieIdIntent);
             }
         });
+
     }
 
     @Override
     public int getItemCount() {
-        return moviesItem.size();
+        return upcomingMovies.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

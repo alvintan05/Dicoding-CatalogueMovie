@@ -3,55 +3,53 @@ package com.alvin.cataloguemovie;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.provider.Settings;
+import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.Toast;
 
-import com.alvin.cataloguemovie.Model.Movies.MovieResponse;
-import com.alvin.cataloguemovie.Retrofit.ApiClient;
-import com.alvin.cataloguemovie.Adapter.RecyclerMovieAdapter;
-import com.alvin.cataloguemovie.Model.Movies.MovieResult;
-
-import java.util.List;
+import com.alvin.cataloguemovie.Fragment.NowPlayingFragment;
+import com.alvin.cataloguemovie.Fragment.PopularFragment;
+import com.alvin.cataloguemovie.Fragment.UpcomingFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "MainActivity";
 
-    private static final String API_KEY = BuildConfig.API_KEY;
-    private static final String LANGUAGE = "en-US";
-    private int currentPage = 1;
-
-    private RecyclerMovieAdapter adapter;
-
-    private Call<MovieResponse> call;
-    private ApiClient apiClient = null;
-    private List<MovieResult> moviesItem;
-
-    @BindView(R.id.recycler_movie)
-    RecyclerView recyclerView;
+    private ActionBarDrawerToggle toggle;
 
     @BindView(R.id.home_toolbar)
     Toolbar homeToolbar;
 
-    @BindView(R.id.progress_bar)
-    ProgressBar progressBar;
+    @BindView(R.id.home_view_pager)
+    ViewPager homeViewPager;
+
+    @BindView(R.id.home_tab_layout)
+    TabLayout homeTabLayout;
+
+    @BindView(R.id.drawer_layout)
+    DrawerLayout drawer;
+
+    @BindView(R.id.nav_view)
+    NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,43 +58,15 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate: started");
         ButterKnife.bind(this);
 
-        progressBar.setVisibility(View.VISIBLE);
+        MyAdapter adapter = new MyAdapter(getSupportFragmentManager());
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+        homeViewPager.setAdapter(adapter);
+        homeTabLayout.setupWithViewPager(homeViewPager);
 
         setSupportActionBar(homeToolbar);
-        getSupportActionBar().setTitle("Movie Catalogue");
+        getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
 
-        getMovie();
-
-    }
-
-    private void getMovie() {
-        apiClient = ApiClient.getInstance();
-        call = apiClient.getApi().getPopularMovies(API_KEY, LANGUAGE, currentPage);
-        call.enqueue(new Callback<MovieResponse>() {
-            @Override
-            public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
-                if (response.isSuccessful()) {
-                    moviesItem = response.body().getMovieResults();
-                    if (moviesItem != null) {
-                        progressBar.setVisibility(View.GONE);
-                        adapter = new RecyclerMovieAdapter(MainActivity.this, moviesItem);
-                        recyclerView.setAdapter(adapter);
-                    } else {
-                        Toast.makeText(MainActivity.this, "Empty", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(MainActivity.this, "Failed", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<MovieResponse> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "Failed", Toast.LENGTH_SHORT).show();
-            }
-        });
-
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
     @Override
@@ -127,4 +97,87 @@ public class MainActivity extends AppCompatActivity {
 
         return true;
     }
+
+    public class MyAdapter extends FragmentStatePagerAdapter {
+
+        public MyAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            Fragment fragment = null;
+            if (position == 0) {
+                fragment = new PopularFragment();
+            }
+            if (position == 1) {
+                fragment = new NowPlayingFragment();
+            }
+            if (position == 2) {
+                fragment = new UpcomingFragment();
+            }
+            return fragment;
+        }
+
+        @Override
+        public int getCount() {
+            return 3;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            String name = null;
+            if (position == 0) {
+                name = getString(R.string.tab_popular);
+            }
+            if (position == 1) {
+                name = getString(R.string.tab_now_playing);
+            }
+            if (position == 2) {
+                name = getString(R.string.tab_upcoming);
+            }
+            return name;
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        toggle = new ActionBarDrawerToggle(this, drawer, homeToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        drawer.removeDrawerListener(toggle);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_home) {
+            // Handle the camera action
+        } else if (id == R.id.nav_change_language) {
+            Intent languageIntent = new Intent(Settings.ACTION_LOCALE_SETTINGS);
+            startActivity(languageIntent);
+        }
+
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
 }

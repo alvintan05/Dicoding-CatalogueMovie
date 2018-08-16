@@ -109,8 +109,9 @@ public class DetailMoviesActivity extends AppCompatActivity {
     }
 
     private void getDetailMovie() {
-        mProgress.setMessage("Loading");
+        mProgress.setMessage(getString(R.string.progress_loading));
         mProgress.show();
+        mProgress.setCanceledOnTouchOutside(false);
         detailMovieCall = apiClient.getApi().getDetailMovies(movie_id, API_KEY);
         detailMovieCall.enqueue(new Callback<DetailMovie>() {
             @Override
@@ -131,13 +132,13 @@ public class DetailMoviesActivity extends AppCompatActivity {
                     if (!detailMovie.getTagline().isEmpty()) {
                         movieTagline.setText("\"" + detailMovie.getTagline() + "\"");
                     } else {
-                        movieTagline.setText("No Tagline");
+                        movieTagline.setText(R.string.no_tagline);
                     }
 
                     movieRate.setText(detailMovie.getVoteAverage().toString());
                     movieReleaseStatus.setText(detailMovie.getStatus());
                     movieReleaseDate.setText(dateFormat(detailMovie.getReleaseDate()));
-                    movieRuntime.setText(detailMovie.getRuntime() + " mins");
+                    movieRuntime.setText(detailMovie.getRuntime() + getString(R.string.minute));
                     movieOverview.setText(detailMovie.getOverview());
                     movieLanguage.setText(detailMovie.getOriginalLanguage());
                     movieHomepage.setText(detailMovie.getHomepage());
@@ -187,7 +188,7 @@ public class DetailMoviesActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<DetailMovie> call, Throwable t) {
-                Toast.makeText(DetailMoviesActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(DetailMoviesActivity.this, R.string.toast_failed, Toast.LENGTH_SHORT).show();
             }
         });
     }
