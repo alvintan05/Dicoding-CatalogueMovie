@@ -13,13 +13,11 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.alvin.cataloguemovie.Adapter.RecyclerSearchAdapter;
-import com.alvin.cataloguemovie.Model.Movies.MovieResponse;
-import com.alvin.cataloguemovie.Model.Movies.MovieResult;
+import com.alvin.cataloguemovie.Entity.Movies.MovieResponse;
+import com.alvin.cataloguemovie.Entity.Movies.MovieResult;
 import com.alvin.cataloguemovie.Retrofit.ApiClient;
 
 import java.util.List;
@@ -62,7 +60,7 @@ public class SearchableActivity extends AppCompatActivity {
         handleIntent(getIntent());
 
         setSupportActionBar(searchToolbar);
-        getSupportActionBar().setTitle(search);
+        if (getSupportActionBar() != null) getSupportActionBar().setTitle(search);
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
 

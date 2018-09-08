@@ -12,8 +12,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.alvin.cataloguemovie.BuildConfig;
+import com.alvin.cataloguemovie.CustomOnItemClickListener;
 import com.alvin.cataloguemovie.DetailMoviesActivity;
-import com.alvin.cataloguemovie.Model.Movies.MovieResult;
+import com.alvin.cataloguemovie.Entity.Movies.MovieResult;
 import com.alvin.cataloguemovie.R;
 import com.bumptech.glide.Glide;
 
@@ -58,8 +59,6 @@ public class RecyclerSearchAdapter extends RecyclerView.Adapter<RecyclerSearchAd
 
         String poster_url = IMAGE_BASE_URL + "w185" + searchMovieResults.get(position).getMoviePosterPath();
 
-        final int movie_id = searchMovieResults.get(position).getMovieId();
-
         Log.d(TAG, "url image : " + poster_url);
 
         Glide.with(mContext.getApplicationContext())
@@ -74,14 +73,12 @@ public class RecyclerSearchAdapter extends RecyclerView.Adapter<RecyclerSearchAd
             holder.tvMovieDate.setText(dateFormat(searchMovieResults.get(position).getMovieReleaseDate()));
         }
 
-        holder.parentMovieCard.setOnClickListener(new View.OnClickListener() {
+        holder.parentMovieCard.setOnClickListener(new CustomOnItemClickListener(position, new CustomOnItemClickListener.OnItemClickCallback() {
             @Override
-            public void onClick(View v) {
-                Intent movieIdIntent = new Intent(mContext, DetailMoviesActivity.class);
-                movieIdIntent.putExtra(DetailMoviesActivity.MOVIE_ID, movie_id);
-                mContext.startActivity(movieIdIntent);
+            public void onItemClicked(View view, int position) {
+                showDetailMovie(searchMovieResults.get(position).getMovieId());
             }
-        });
+        }));
 
     }
 
@@ -127,6 +124,14 @@ public class RecyclerSearchAdapter extends RecyclerView.Adapter<RecyclerSearchAd
         
         return finalDate;
 
+    }
+
+    private void showDetailMovie(int movie_id) {
+        String local = "0";
+        Intent movieIdIntent = new Intent(mContext, DetailMoviesActivity.class);
+        movieIdIntent.putExtra(DetailMoviesActivity.MOVIE_ID, movie_id);
+        movieIdIntent.putExtra(DetailMoviesActivity.LOCAL_STATUS, local );
+        mContext.startActivity(movieIdIntent);
     }
 
 }

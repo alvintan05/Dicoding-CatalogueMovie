@@ -64,7 +64,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         homeTabLayout.setupWithViewPager(homeViewPager);
 
         setSupportActionBar(homeToolbar);
-        getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
 
         navigationView.setNavigationItemSelectedListener(this);
     }
@@ -174,6 +175,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_change_language) {
             Intent languageIntent = new Intent(Settings.ACTION_LOCALE_SETTINGS);
             startActivity(languageIntent);
+        } else if (id == R.id.nav_favourite) {
+            Intent favouriteIntent = new Intent(MainActivity.this, FavouriteActivity.class);
+            startActivity(favouriteIntent);
         }
 
         drawer.closeDrawer(GravityCompat.START);

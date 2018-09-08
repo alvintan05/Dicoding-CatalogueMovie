@@ -1,8 +1,6 @@
-package com.alvin.cataloguemovie.Adapter;
+    package com.alvin.cataloguemovie.Adapter;
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.Build;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,9 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.alvin.cataloguemovie.BuildConfig;
-import com.alvin.cataloguemovie.DetailMoviesActivity;
-import com.alvin.cataloguemovie.Model.Detail.DetailMovie;
-import com.alvin.cataloguemovie.Model.Movies.MovieResult;
+import com.alvin.cataloguemovie.Entity.Movies.MovieResult;
 import com.alvin.cataloguemovie.R;
 import com.bumptech.glide.Glide;
 
@@ -60,8 +56,6 @@ public class RecyclerNowPlayingAdapter extends RecyclerView.Adapter<RecyclerNowP
 
         String poster_url = IMAGE_BASE_URL + "w185" + nowPlayMovies.get(position).getMoviePosterPath();
 
-        final int movie_id = nowPlayMovies.get(position).getMovieId();
-
         Glide.with(context)
                 .load(poster_url)
                 .into(holder.imgMoviePoster);
@@ -69,15 +63,6 @@ public class RecyclerNowPlayingAdapter extends RecyclerView.Adapter<RecyclerNowP
         holder.tvMovieTitle.setText(nowPlayMovies.get(position).getMovieTitle());
         holder.tvMovieDescription.setText(nowPlayMovies.get(position).getMovieDescription());
         holder.tvMovieDate.setText(dateFormat(nowPlayMovies.get(position).getMovieReleaseDate()));
-
-        holder.parentMovieCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent movieIdIntent = new Intent(context, DetailMoviesActivity.class);
-                movieIdIntent.putExtra(DetailMoviesActivity.MOVIE_ID, movie_id);
-                context.startActivity(movieIdIntent);
-            }
-        });
 
     }
 
@@ -126,5 +111,4 @@ public class RecyclerNowPlayingAdapter extends RecyclerView.Adapter<RecyclerNowP
         return finalDate;
 
     }
-
 }

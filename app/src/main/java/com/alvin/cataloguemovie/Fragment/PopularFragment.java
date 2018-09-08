@@ -1,6 +1,7 @@
 package com.alvin.cataloguemovie.Fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,8 +14,10 @@ import android.widget.Toast;
 
 import com.alvin.cataloguemovie.Adapter.RecyclerPopularAdapter;
 import com.alvin.cataloguemovie.BuildConfig;
-import com.alvin.cataloguemovie.Model.Movies.MovieResponse;
-import com.alvin.cataloguemovie.Model.Movies.MovieResult;
+import com.alvin.cataloguemovie.DetailMoviesActivity;
+import com.alvin.cataloguemovie.ItemClickSupport;
+import com.alvin.cataloguemovie.Entity.Movies.MovieResponse;
+import com.alvin.cataloguemovie.Entity.Movies.MovieResult;
 import com.alvin.cataloguemovie.R;
 import com.alvin.cataloguemovie.Retrofit.ApiClient;
 
@@ -71,6 +74,13 @@ public class PopularFragment extends Fragment {
 
         getMovie();
 
+        ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                showDetailMovie(moviesItem.get(position).getMovieId());
+            }
+        });
+
         return view;
     }
 
@@ -102,5 +112,11 @@ public class PopularFragment extends Fragment {
 
     }
 
-
+    private void showDetailMovie(int movie_id) {
+        String local = "0";
+        Intent movieIdIntent = new Intent(getActivity(), DetailMoviesActivity.class);
+        movieIdIntent.putExtra(DetailMoviesActivity.MOVIE_ID, movie_id);
+        movieIdIntent.putExtra(DetailMoviesActivity.LOCAL_STATUS, local );
+        getActivity().startActivity(movieIdIntent);
+    }
 }

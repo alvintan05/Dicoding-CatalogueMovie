@@ -1,19 +1,25 @@
 package com.alvin.cataloguemovie;
 
 import android.app.ProgressDialog;
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alvin.cataloguemovie.Database.DatabaseContract;
 import com.alvin.cataloguemovie.Retrofit.ApiClient;
-import com.alvin.cataloguemovie.Model.Detail.DetailMovie;
+import com.alvin.cataloguemovie.Entity.Detail.DetailMovie;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -28,21 +34,40 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class DetailMoviesActivity extends AppCompatActivity {
+import static com.alvin.cataloguemovie.Database.DatabaseContract.CONTENT_URI;
+import static com.alvin.cataloguemovie.Database.DatabaseContract.FavouriteColumns.BACKDROP_URL;
+import static com.alvin.cataloguemovie.Database.DatabaseContract.FavouriteColumns.HOMEPAGE;
+import static com.alvin.cataloguemovie.Database.DatabaseContract.FavouriteColumns.ORIGINAL_LANGUAGE;
+import static com.alvin.cataloguemovie.Database.DatabaseContract.FavouriteColumns.OVERVIEW;
+import static com.alvin.cataloguemovie.Database.DatabaseContract.FavouriteColumns.POSTER_URL;
+import static com.alvin.cataloguemovie.Database.DatabaseContract.FavouriteColumns.RELEASE_DATE;
+import static com.alvin.cataloguemovie.Database.DatabaseContract.FavouriteColumns.RUNTIME;
+import static com.alvin.cataloguemovie.Database.DatabaseContract.FavouriteColumns.STATUS;
+import static com.alvin.cataloguemovie.Database.DatabaseContract.FavouriteColumns.TAGLINE;
+import static com.alvin.cataloguemovie.Database.DatabaseContract.FavouriteColumns.TITLE;
+import static com.alvin.cataloguemovie.Database.DatabaseContract.FavouriteColumns.VOTE_AVERAGE;
+import static com.alvin.cataloguemovie.Database.DatabaseContract.getColumnString;
+
+public class DetailMoviesActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "DetailMoviesActivity";
 
     private static final String IMAGE_BASE_URL = BuildConfig.IMAGE_BASE_URL;
     private static final String API_KEY = BuildConfig.API_KEY;
     public static String MOVIE_ID = "movie_id";
+    public static String LOCAL_STATUS = "local_status";
 
     private int movie_id;
     private int mutedColor = R.attr.colorPrimary;
-    private ProgressDialog mProgress;
 
+    private ProgressDialog mProgress;
     private ApiClient apiClient = null;
     private Call<DetailMovie> detailMovieCall;
+
     private DetailMovie detailMovie;
+    private boolean favourite;
+
+    private Uri uri;
 
     @BindView(R.id.tb)
     Toolbar tb;
@@ -86,29 +111,47 @@ public class DetailMoviesActivity extends AppCompatActivity {
     @BindView(R.id.detail_movie_homepage)
     TextView movieHomepage;
 
+    @BindView(R.id.icon_favorite_unclicked)
+    ImageButton icFavoriteUnclicked;
+
+    @BindView(R.id.icon_favorite_clicked)
+    ImageButton icFavoriteClicked;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_movies);
         ButterKnife.bind(this);
 
-        apiClient = ApiClient.getInstance();
-
         mProgress = new ProgressDialog(this);
 
+        uri = getIntent().getData();
+
         setSupportActionBar(tb);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        movie_id = getIntent().getIntExtra(MOVIE_ID, movie_id);
+        String check = getIntent().getStringExtra(LOCAL_STATUS);
+
+        icFavoriteUnclicked.setOnClickListener(this);
+        icFavoriteClicked.setOnClickListener(this);
 
         ctl.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
 
-        movie_id = getIntent().getIntExtra(MOVIE_ID, movie_id);
+        if (check.equals("1")) {
+            Log.d(TAG, "onCreate: sama cuy");
+            getMovieSqlite();
+        }
+        if (check.equals("0")) {
+            Log.d(TAG, "onCreate: gak sama cuy");
+            getDetailMovie();
+        }
 
-        Log.d(TAG, "onCreate: " + movie_id);
-
-        getDetailMovie();
+        loadSqliteData();
     }
 
     private void getDetailMovie() {
+        apiClient = ApiClient.getInstance();
         mProgress.setMessage(getString(R.string.progress_loading));
         mProgress.show();
         mProgress.setCanceledOnTouchOutside(false);
@@ -180,17 +223,95 @@ public class DetailMoviesActivity extends AppCompatActivity {
                                     });
                                 }
                             });
-
                 }
-
-
             }
 
             @Override
             public void onFailure(Call<DetailMovie> call, Throwable t) {
+                mProgress.dismiss();
                 Toast.makeText(DetailMoviesActivity.this, R.string.toast_failed, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void getMovieSqlite() {
+        Log.d(TAG, "getMovieSqlite: berjalan");
+
+        mProgress.setMessage(getString(R.string.progress_loading));
+        mProgress.show();
+
+        Cursor cursor = getContentResolver().query(uri,
+                null,
+                null,
+                null,
+                null);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                detailMovie = new DetailMovie(cursor);
+
+                String poster_url = IMAGE_BASE_URL + "w342" + detailMovie.getPosterPath();
+                String backdrop_url = IMAGE_BASE_URL + "w780" + detailMovie.getBackdropPath();
+
+                movieTitleBig.setText(detailMovie.getTitle());
+                movieYear.setText(detailMovie.getReleaseDate().split("-")[0]);
+
+                //buat set apabila taglinenya kosong
+                if (!detailMovie.getTagline().isEmpty()) {
+                    movieTagline.setText("\"" + detailMovie.getTagline() + "\"");
+                } else {
+                    movieTagline.setText(R.string.no_tagline);
+                }
+
+                movieRate.setText(detailMovie.getVoteAverage().toString());
+                movieReleaseStatus.setText(detailMovie.getStatus());
+                movieReleaseDate.setText(dateFormat(detailMovie.getReleaseDate()));
+                movieRuntime.setText(detailMovie.getRuntime() + getString(R.string.minute));
+                movieOverview.setText(detailMovie.getOverview());
+                movieLanguage.setText(detailMovie.getOriginalLanguage());
+                movieHomepage.setText(detailMovie.getHomepage());
+
+                Glide.with(getApplicationContext())
+                        .load(poster_url)
+                        .placeholder(R.drawable.example)
+                        .error(R.drawable.example)
+                        .crossFade()
+                        .into(imgPoster);
+
+                Glide.with(getApplicationContext())
+                        .load(backdrop_url)
+                        .placeholder(R.drawable.example_backdrop)
+                        .error(R.drawable.example_backdrop)
+                        .crossFade()
+                        .into(imgBackdrop);
+
+                //set title toolbar sesuai judul
+                ctl.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(TITLE)));
+
+                // mengubah gambar poster menjadi bitmap
+                int myWidth = 600;
+                int myHeight = 900;
+
+                Glide.with(getApplicationContext())
+                        .load(poster_url)
+                        .asBitmap()
+                        .into(new SimpleTarget<Bitmap>(myWidth, myHeight) {
+                            @Override
+                            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                // mengekstrak warna dari gambar yang digunakan
+                                Palette.from(resource).generate(new Palette.PaletteAsyncListener() {
+                                    @Override
+                                    public void onGenerated(Palette palette) {
+                                        mutedColor = palette.getMutedColor(R.attr.colorPrimary);
+                                        ctl.setContentScrimColor(mutedColor);
+                                    }
+                                });
+                            }
+                        });
+            }
+            cursor.close();
+        }
+
+        mProgress.dismiss();
     }
 
     @Override
@@ -217,4 +338,70 @@ public class DetailMoviesActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+
+        if (id == R.id.icon_favorite_unclicked) {
+            favourite = true;
+            setFavoriteIcon();
+
+            ContentValues values = new ContentValues();
+
+            values.put(MOVIE_ID, detailMovie.getId());
+            values.put(TITLE, detailMovie.getTitle());
+            values.put(RELEASE_DATE, detailMovie.getReleaseDate());
+            values.put(TAGLINE, detailMovie.getTagline());
+            values.put(VOTE_AVERAGE, detailMovie.getVoteAverage());
+            values.put(OVERVIEW, detailMovie.getOverview());
+            values.put(STATUS, detailMovie.getStatus());
+            values.put(ORIGINAL_LANGUAGE, detailMovie.getOriginalLanguage());
+            values.put(RUNTIME, detailMovie.getRuntime());
+            values.put(HOMEPAGE, detailMovie.getHomepage());
+            values.put(POSTER_URL, detailMovie.getPosterPath());
+            values.put(BACKDROP_URL, detailMovie.getBackdropPath());
+
+            getContentResolver().insert(CONTENT_URI, values);
+
+            Toast.makeText(this, R.string.add_favourite, Toast.LENGTH_SHORT).show();
+
+
+        } else if (id == R.id.icon_favorite_clicked) {
+            favourite = false;
+            setFavoriteIcon();
+
+            getContentResolver().delete(Uri.parse(CONTENT_URI + "/" + movie_id),
+                    null,
+                    null);
+
+            Toast.makeText(this, R.string.remove_favourite, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void loadSqliteData() {
+        Cursor cursor = getContentResolver().query(Uri.parse(CONTENT_URI + "/" + movie_id),
+                null,
+                null,
+                null,
+                null);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                String idIntent = "" + movie_id;
+                String movieId = getColumnString(cursor, DatabaseContract.FavouriteColumns.MOVIE_ID);
+                if (movieId.equals(idIntent)) favourite = true;
+            }
+            cursor.close();
+        } else favourite = false;
+        setFavoriteIcon();
+    }
+
+    private void setFavoriteIcon() {
+        if (favourite) {
+            icFavoriteUnclicked.setVisibility(View.INVISIBLE);
+            icFavoriteClicked.setVisibility(View.VISIBLE);
+        } else {
+            icFavoriteUnclicked.setVisibility(View.VISIBLE);
+            icFavoriteClicked.setVisibility(View.INVISIBLE);
+        }
+    }
 }

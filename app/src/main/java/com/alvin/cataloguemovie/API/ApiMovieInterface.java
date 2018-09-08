@@ -1,7 +1,7 @@
 package com.alvin.cataloguemovie.API;
 
-import com.alvin.cataloguemovie.Model.Detail.DetailMovie;
-import com.alvin.cataloguemovie.Model.Movies.MovieResponse;
+import com.alvin.cataloguemovie.Entity.Detail.DetailMovie;
+import com.alvin.cataloguemovie.Entity.Movies.MovieResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

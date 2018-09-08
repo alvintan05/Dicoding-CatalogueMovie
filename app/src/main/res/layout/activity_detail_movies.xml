@@ -72,23 +72,54 @@
                     android:orientation="vertical"
                     app:layout_collapseMode="parallax">
 
-                    <TextView
-                        android:id="@+id/detail_movie_title_1"
+                    <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        tools:text="Movie_Title"
-                        android:textColor="#fff"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/detail_movie_title_1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_toLeftOf="@+id/icon_favorite_unclicked"
+                            android:layout_toStartOf="@+id/icon_favorite_unclicked"
+                            android:textColor="#fff"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            tools:text="Movie_Title" />
+
+                        <ImageButton
+                            android:id="@+id/icon_favorite_unclicked"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginEnd="10dp"
+                            android:layout_marginRight="10dp"
+                            android:background="@android:color/transparent"
+                            android:src="@drawable/ic_favorite_border_white_24dp" />
+
+                        <ImageButton
+                            android:id="@+id/icon_favorite_clicked"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginEnd="10dp"
+                            android:layout_marginRight="10dp"
+                            android:visibility="invisible"
+                            android:background="@android:color/transparent"
+                            android:src="@drawable/ic_favorite_clicked" />
+
+                    </RelativeLayout>
 
                     <TextView
                         android:id="@+id/detail_movie_year"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        tools:text="Release_year"
                         android:textColor="#fff"
                         android:textSize="14sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        tools:text="Release_year" />
 
                     <TextView
                         android:id="@+id/detail_movie_tagline"
@@ -96,19 +127,22 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/acitivity_5dp_margin"
                         android:layout_marginTop="@dimen/acitivity_5dp_margin"
-                        tools:text="Tagline"
                         android:textColor="#fff"
-                        android:textStyle="italic" />
+                        android:textStyle="italic"
+                        tools:text="Tagline" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                        <ImageView
+                        <TextView
                             android:id="@+id/ic_star"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/ic_star" />
+                            android:text="@string/rating"
+                            android:textColor="@android:color/white"
+                            android:textSize="17sp"
+                            android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/detail_movie_rate"
@@ -121,9 +155,9 @@
                             android:layout_toEndOf="@+id/ic_star"
                             android:layout_toRightOf="@+id/ic_star"
                             android:gravity="center_vertical"
-                            tools:text="0.0"
                             android:textColor="#fff"
-                            android:textSize="17sp" />
+                            android:textSize="17sp"
+                            tools:text="0.0" />
 
                     </RelativeLayout>
 
@@ -310,13 +344,13 @@
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/detail_movie_homepage"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:autoLink="all"
                         android:clickable="true"
                         android:focusable="true"
                         android:textColorLink="@color/colorPrimary"
-                        android:id="@+id/detail_movie_homepage"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
                         tools:text="https://www.google.com" />
 
                 </LinearLayout>

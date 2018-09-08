@@ -3,6 +3,8 @@
     package="com.alvin.cataloguemovie">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <permission android:name="com.alvin.cataloguemovie.READ_DATABASE" android:protectionLevel="normal"/>
+    <permission android:name="com.alvin.cataloguemovie.WRITE_DATABASE" android:protectionLevel="normal"/>
 
     <application
         android:allowBackup="true"
@@ -42,6 +44,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
+        <activity android:name=".FavouriteActivity"
+            android:theme="@style/NoActionBar">
+
+        </activity>
+        <provider
+            android:authorities="com.alvin.cataloguemovie"
+            android:name=".Provider.FavouriteProvider"
+            android:exported="true"
+            android:readPermission="com.alvin.cataloguemovie.READ_DATABASE"
+            android:writePermission="com.alvin.cataloguemovie.WRITE_DATABASE" />
 
     </application>
 

@@ -10,7 +10,8 @@
         android:layout_height="match_parent"
         android:paddingLeft="@dimen/acitivity_10dp_margin"
         android:paddingRight="@dimen/acitivity_10dp_margin"
-        android:paddingTop="@dimen/acitivity_5dp_margin" />
+        android:paddingTop="@dimen/acitivity_5dp_margin"
+        tools:listitem="@layout/item_movie_list" />
 
     <ProgressBar
         android:id="@+id/pb_now_playing"

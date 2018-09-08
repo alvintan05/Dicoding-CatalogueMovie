@@ -35,5 +35,14 @@
     <string name="progress_loading">Loading</string>
     <string name="minute">\u0020mins</string>
     <string name="no_tagline">No Tagline</string>
+    <string name="detail_movie_title">Movie Title</string>
+    <string name="detail_movie_description">Description</string>
+    <string name="rating">Rating</string>
+
+    <string name="favourite">Favourite</string>
+    <string name="add_favourite">Added to the favourite list</string>
+    <string name="remove_favourite">Removed from favourite list</string>
+    <string name="no_favourite_data">No Favourite Data</string>
+    <string name="removed_favourite">One item removed from favourite</string>
 
 </resources>

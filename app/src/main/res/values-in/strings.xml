@@ -37,4 +37,12 @@
     <string name="minute">\u0020menit</string>
     <string name="no_tagline">Tidak Ada Slogan</string>
 
+    <string name="rating">Rating</string>
+
+    <string name="favourite">Favorit</string>
+    <string name="add_favourite">Ditambahkan ke dalam daftar favorit</string>
+    <string name="remove_favourite">Dihapus dari daftar favorit</string>
+    <string name="no_favourite_data">Tidak ada data favorit</string>
+    <string name="removed_favourite">Satu item dihapus dari daftar favorit</string>
+
 </resources>

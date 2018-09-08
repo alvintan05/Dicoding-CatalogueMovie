@@ -1,7 +1,6 @@
 package com.alvin.cataloguemovie.Adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,8 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.alvin.cataloguemovie.BuildConfig;
-import com.alvin.cataloguemovie.DetailMoviesActivity;
-import com.alvin.cataloguemovie.Model.Movies.MovieResult;
+import com.alvin.cataloguemovie.Entity.Movies.MovieResult;
 import com.alvin.cataloguemovie.R;
 import com.bumptech.glide.Glide;
 
@@ -57,8 +55,6 @@ public class RecyclerPopularAdapter extends RecyclerView.Adapter<RecyclerPopular
 
         String poster_url = IMAGE_BASE_URL + "w185" + moviesItem.get(position).getMoviePosterPath();
 
-        final int movie_id = moviesItem.get(position).getMovieId();
-
         Log.d(TAG, "url image : " + poster_url);
 
         Glide.with(mContext.getApplicationContext())
@@ -69,15 +65,6 @@ public class RecyclerPopularAdapter extends RecyclerView.Adapter<RecyclerPopular
         holder.tvMovieTitle.setText(moviesItem.get(position).getMovieTitle());
         holder.tvMovieDescription.setText(moviesItem.get(position).getMovieDescription());
         holder.tvMovieDate.setText(dateFormat(moviesItem.get(position).getMovieReleaseDate()));
-
-        holder.parentMovieCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent movieIdIntent = new Intent(mContext, DetailMoviesActivity.class);
-                movieIdIntent.putExtra(DetailMoviesActivity.MOVIE_ID, movie_id);
-                mContext.startActivity(movieIdIntent);
-            }
-        });
     }
 
     @Override
