@@ -44,5 +44,7 @@
     <string name="remove_favourite">Dihapus dari daftar favorit</string>
     <string name="no_favourite_data">Tidak ada data favorit</string>
     <string name="removed_favourite">Satu item dihapus dari daftar favorit</string>
+    <string name="share">Berbagi</string>
+    <string name="share_using">Berbagi dengan</string>
 
 </resources>

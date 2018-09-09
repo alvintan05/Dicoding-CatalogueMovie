@@ -2,6 +2,7 @@ package com.alvin.favouritelistapp;
 
 import android.app.ProgressDialog;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -11,6 +12,8 @@ import android.os.Bundle;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -50,10 +53,12 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
     private static final String IMAGE_BASE_URL = BuildConfig.IMAGE_BASE_URL;
     public static String MOVIE_ID = "movie_id";
+    private static final String TMDB_URL = "https://www.themoviedb.org/movie/";
 
     private boolean favourite;
     private int mutedColor = R.attr.colorPrimary;
     private int movieId;
+    private String movie_url;
 
     private ProgressDialog mProgress;
     private Uri uri;
@@ -118,6 +123,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
         uri = getIntent().getData();
         movieId = getIntent().getIntExtra(MOVIE_ID, movieId);
+        movie_url = TMDB_URL + "" + movieId;
 
         setSupportActionBar(tb);
         if (getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -302,4 +308,26 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
             icFavoriteClicked.setVisibility(View.INVISIBLE);
         }
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_detail, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.icon_share) {
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setType("text/plain");
+            String subject = detailMovie.getTitle();
+            String description = detailMovie.getOverview();
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
+            shareIntent.putExtra(Intent.EXTRA_TEXT, subject + "\n\n" + description + "\n\n" + movie_url);
+            startActivity(Intent.createChooser(shareIntent, getResources().getString(R.string.share_using)));
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

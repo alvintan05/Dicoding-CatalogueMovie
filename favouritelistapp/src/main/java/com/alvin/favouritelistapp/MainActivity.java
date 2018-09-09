@@ -1,13 +1,17 @@
 package com.alvin.favouritelistapp;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
+import android.provider.Settings;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -42,7 +46,8 @@ public class MainActivity extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
 
         setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) getSupportActionBar().setTitle(getResources().getString(R.string.favourite));
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setTitle(getResources().getString(R.string.favourite));
 
         adapter = new RecyclerFavouriteAdapter(list, this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -87,6 +92,22 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.home_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.language_icon) {
+            Intent languageIntent = new Intent(Settings.ACTION_LOCALE_SETTINGS);
+            startActivity(languageIntent);
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void showSnackbarMessage(String message) {

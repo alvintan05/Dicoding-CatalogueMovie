@@ -2,6 +2,7 @@ package com.alvin.cataloguemovie;
 
 import android.app.ProgressDialog;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -11,9 +12,13 @@ import android.os.Bundle;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ShareActionProvider;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,17 +61,18 @@ public class DetailMoviesActivity extends AppCompatActivity implements View.OnCl
     private static final String API_KEY = BuildConfig.API_KEY;
     public static String MOVIE_ID = "movie_id";
     public static String LOCAL_STATUS = "local_status";
+    private static final String TMDB_URL = "https://www.themoviedb.org/movie/";
 
     private int movie_id;
     private int mutedColor = R.attr.colorPrimary;
+    private boolean favourite;
+    private String movie_url;
 
     private ProgressDialog mProgress;
     private ApiClient apiClient = null;
     private Call<DetailMovie> detailMovieCall;
 
     private DetailMovie detailMovie;
-    private boolean favourite;
-
     private Uri uri;
 
     @BindView(R.id.tb)
@@ -132,6 +138,7 @@ public class DetailMoviesActivity extends AppCompatActivity implements View.OnCl
 
         movie_id = getIntent().getIntExtra(MOVIE_ID, movie_id);
         String check = getIntent().getStringExtra(LOCAL_STATUS);
+        movie_url = TMDB_URL + "" + movie_id;
 
         icFavoriteUnclicked.setOnClickListener(this);
         icFavoriteClicked.setOnClickListener(this);
@@ -404,4 +411,26 @@ public class DetailMoviesActivity extends AppCompatActivity implements View.OnCl
             icFavoriteClicked.setVisibility(View.INVISIBLE);
         }
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_detail, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.icon_share) {
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setType("text/plain");
+            String subject = detailMovie.getTitle();
+            String description = detailMovie.getOverview();
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
+            shareIntent.putExtra(Intent.EXTRA_TEXT, subject + "\n\n" + description + "\n\n" + movie_url);
+            startActivity(Intent.createChooser(shareIntent, getResources().getString(R.string.share_using)));
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

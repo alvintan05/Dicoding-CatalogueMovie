@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">FavouriteListApp</string>
+    <string name="app_name">Favourite List</string>
 
     <string name="detail_movie_title">Movie Title</string>
     <string name="detail_movie_description">Description</string>
@@ -21,5 +21,7 @@
     <string name="removed_favourite">One item removed from favourite</string>
 
     <string name="favourite">Favourite</string>
-
+    <string name="change_language">Change Language</string>
+    <string name="share">Share</string>
+    <string name="share_using">Share Using</string>
 </resources>

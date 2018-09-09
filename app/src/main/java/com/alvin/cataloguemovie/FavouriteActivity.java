@@ -12,12 +12,13 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.alvin.cataloguemovie.Adapter.RecyclerFavouriteAdapter;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.alvin.cataloguemovie.Database.DatabaseContract.CONTENT_URI;
 
-public class FavouriteActivity extends AppCompatActivity{
+public class FavouriteActivity extends AppCompatActivity {
 
     private RecyclerFavouriteAdapter adapter;
     private Cursor list;
@@ -41,8 +42,10 @@ public class FavouriteActivity extends AppCompatActivity{
         progressBar.setVisibility(View.VISIBLE);
 
         setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null)
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(getResources().getString(R.string.favourite));
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         adapter = new RecyclerFavouriteAdapter(list, this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -86,5 +89,11 @@ public class FavouriteActivity extends AppCompatActivity{
 
     private void showSnackbarMessage(String message) {
         Snackbar.make(recyclerView, message, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }
