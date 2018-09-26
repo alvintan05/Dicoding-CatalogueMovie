@@ -3,6 +3,7 @@ package com.alvin.cataloguemovie.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.alvin.cataloguemovie.Adapter.RecyclerNowPlayingAdapter;
+import com.alvin.cataloguemovie.Adapter.RecyclerPopularAdapter;
 import com.alvin.cataloguemovie.BuildConfig;
 import com.alvin.cataloguemovie.DetailMoviesActivity;
 import com.alvin.cataloguemovie.ItemClickSupport;
@@ -21,6 +23,7 @@ import com.alvin.cataloguemovie.Entity.Movies.MovieResult;
 import com.alvin.cataloguemovie.R;
 import com.alvin.cataloguemovie.Retrofit.ApiClient;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -44,7 +47,7 @@ public class NowPlayingFragment extends Fragment {
 
     private Call<MovieResponse> call;
     private ApiClient apiClient = null;
-    private List<MovieResult> nowPlayMovies;
+    private List<MovieResult> nowPlayMovies = new ArrayList<>();
 
     @BindView(R.id.rv_now_playing)
     RecyclerView rvNowPlaying;
@@ -68,10 +71,14 @@ public class NowPlayingFragment extends Fragment {
         region = Locale.getDefault().getCountry();
 
         progressBar.setVisibility(View.VISIBLE);
-
         rvNowPlaying.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        getNowPlayMovies();
+        if (savedInstanceState != null) {
+            nowPlayMovies = savedInstanceState.getParcelableArrayList("movies");
+            prepareView();
+        } else {
+            getNowPlayMovies();
+        }
 
         ItemClickSupport.addTo(rvNowPlaying).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
@@ -80,6 +87,17 @@ public class NowPlayingFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    @Override public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("movies", new ArrayList<>(adapter.getMovies()));
+    }
+
+    private void prepareView() {
+        progressBar.setVisibility(View.GONE);
+        adapter = new RecyclerNowPlayingAdapter(getActivity(), nowPlayMovies);
+        rvNowPlaying.setAdapter(adapter);
     }
 
     private void getNowPlayMovies() {

@@ -113,4 +113,8 @@ public class RecyclerPopularAdapter extends RecyclerView.Adapter<RecyclerPopular
 
     }
 
+    public List<MovieResult> getMovies(){
+        return  moviesItem;
+    }
+
 }

@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,13 +14,16 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
 import android.widget.Toast;
 
+import com.alvin.cataloguemovie.Adapter.RecyclerNowPlayingAdapter;
 import com.alvin.cataloguemovie.Adapter.RecyclerSearchAdapter;
 import com.alvin.cataloguemovie.Entity.Movies.MovieResponse;
 import com.alvin.cataloguemovie.Entity.Movies.MovieResult;
 import com.alvin.cataloguemovie.Retrofit.ApiClient;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -42,7 +46,7 @@ public class SearchableActivity extends AppCompatActivity {
 
     private ApiClient apiClient = null;
     private Call<MovieResponse> movieResponseCall;
-    private List<MovieResult> movieResults;
+    private List<MovieResult> movieResults = new ArrayList<>();
 
     @BindView(R.id.recycler_search_movie)
     RecyclerView recyclerViewSearch;
@@ -66,13 +70,36 @@ public class SearchableActivity extends AppCompatActivity {
 
         mProgress = new ProgressDialog(this);
         mProgress.setMessage(getString(R.string.progress_loading));
+        mProgress.show();
 
-        getSearchResult();
+        recyclerViewSearch.setLayoutManager(new LinearLayoutManager(SearchableActivity.this));
+
+        if (savedInstanceState != null) {
+            movieResults = savedInstanceState.getParcelableArrayList("movies");
+            prepareView();
+        } else {
+            getSearchResult();
+        }
+
+
+//        getSearchResult();
 
     }
 
+    @Override public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("movies", new ArrayList<>(adapter.getMovies()));
+    }
+
+    private void prepareView() {
+        mProgress.dismiss();
+        adapter = new RecyclerSearchAdapter(this, movieResults);
+        recyclerViewSearch.setAdapter(adapter);
+    }
+
+
     private void getSearchResult() {
-        mProgress.show();
+//        mProgress.show();
         apiClient = ApiClient.getInstance();
         if (searchChange == null) {
             movieResponseCall = apiClient.getApi().getSearchMovies(API_KEY, LANGUAGE, search);
@@ -85,7 +112,6 @@ public class SearchableActivity extends AppCompatActivity {
                         if (movieResults != null) {
                             adapter = new RecyclerSearchAdapter(SearchableActivity.this, movieResults);
                             recyclerViewSearch.setAdapter(adapter);
-                            recyclerViewSearch.setLayoutManager(new LinearLayoutManager(SearchableActivity.this));
                         }
 
                         if (movieResults.size() == 0) {
@@ -112,7 +138,6 @@ public class SearchableActivity extends AppCompatActivity {
                         if (movieResults != null) {
                             adapter = new RecyclerSearchAdapter(SearchableActivity.this, movieResults);
                             recyclerViewSearch.setAdapter(adapter);
-                            recyclerViewSearch.setLayoutManager(new LinearLayoutManager(SearchableActivity.this));
                         }
                         if (movieResults.size() == 0) {
                             Toast.makeText(SearchableActivity.this, R.string.toast_not_found, Toast.LENGTH_SHORT).show();

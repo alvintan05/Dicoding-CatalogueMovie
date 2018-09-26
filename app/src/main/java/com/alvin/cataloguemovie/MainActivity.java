@@ -26,6 +26,7 @@ import android.view.MenuItem;
 import com.alvin.cataloguemovie.Fragment.NowPlayingFragment;
 import com.alvin.cataloguemovie.Fragment.PopularFragment;
 import com.alvin.cataloguemovie.Fragment.UpcomingFragment;
+import com.alvin.cataloguemovie.alarm.DailyAlarmReceiver;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final String TAG = "MainActivity";
 
     private ActionBarDrawerToggle toggle;
+    private DailyAlarmReceiver dailyAlarmReceiver;
 
     @BindView(R.id.home_toolbar)
     Toolbar homeToolbar;
@@ -68,6 +70,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
 
         navigationView.setNavigationItemSelectedListener(this);
+
+//        dailyAlarmReceiver = new DailyAlarmReceiver();
+//        dailyAlarmReceiver.setRepeatingAlarm(this);
+
     }
 
     @Override
@@ -178,6 +184,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_favourite) {
             Intent favouriteIntent = new Intent(MainActivity.this, FavouriteActivity.class);
             startActivity(favouriteIntent);
+        } else if (id == R.id.nav_setting) {
+            Intent settingIntent = new Intent(MainActivity.this, SettingActivity.class);
+            startActivity(settingIntent);
         }
 
         drawer.closeDrawer(GravityCompat.START);

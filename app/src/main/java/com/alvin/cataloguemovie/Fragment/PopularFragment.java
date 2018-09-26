@@ -3,6 +3,7 @@ package com.alvin.cataloguemovie.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,6 +22,7 @@ import com.alvin.cataloguemovie.Entity.Movies.MovieResult;
 import com.alvin.cataloguemovie.R;
 import com.alvin.cataloguemovie.Retrofit.ApiClient;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -44,7 +46,7 @@ public class PopularFragment extends Fragment {
 
     private Call<MovieResponse> call;
     private ApiClient apiClient = null;
-    private List<MovieResult> moviesItem;
+    private List<MovieResult> moviesItem = new ArrayList<>();
 
     @BindView(R.id.recycler_movie)
     RecyclerView recyclerView;
@@ -69,10 +71,14 @@ public class PopularFragment extends Fragment {
         region = Locale.getDefault().getCountry();
 
         progressBar.setVisibility(View.VISIBLE);
-
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        getMovie();
+        if (savedInstanceState != null) {
+            moviesItem = savedInstanceState.getParcelableArrayList("movies");
+            prepareView();
+        } else {
+            getMovie();
+        }
 
         ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
@@ -82,6 +88,17 @@ public class PopularFragment extends Fragment {
         });
 
         return view;
+    }
+
+    @Override public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("movies", new ArrayList<>(adapter.getMovies()));
+    }
+
+    private void prepareView() {
+        progressBar.setVisibility(View.GONE);
+        adapter = new RecyclerPopularAdapter(getActivity(), moviesItem);
+        recyclerView.setAdapter(adapter);
     }
 
     private void getMovie() {

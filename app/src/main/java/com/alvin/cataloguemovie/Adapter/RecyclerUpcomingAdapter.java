@@ -111,4 +111,8 @@ public class RecyclerUpcomingAdapter extends RecyclerView.Adapter<RecyclerUpcomi
 
     }
 
+    public List<MovieResult> getMovies(){
+        return  upcomingMovies;
+    }
+
 }

@@ -111,4 +111,9 @@ public class RecyclerNowPlayingAdapter extends RecyclerView.Adapter<RecyclerNowP
         return finalDate;
 
     }
+
+    public List<MovieResult> getMovies(){
+        return  nowPlayMovies;
+    }
+
 }

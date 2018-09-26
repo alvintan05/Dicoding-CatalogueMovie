@@ -3,6 +3,7 @@ package com.alvin.cataloguemovie.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.alvin.cataloguemovie.Adapter.RecyclerPopularAdapter;
 import com.alvin.cataloguemovie.Adapter.RecyclerUpcomingAdapter;
 import com.alvin.cataloguemovie.BuildConfig;
 import com.alvin.cataloguemovie.DetailMoviesActivity;
@@ -21,6 +23,7 @@ import com.alvin.cataloguemovie.Entity.Movies.MovieResult;
 import com.alvin.cataloguemovie.R;
 import com.alvin.cataloguemovie.Retrofit.ApiClient;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -44,7 +47,7 @@ public class UpcomingFragment extends Fragment {
 
     private Call<MovieResponse> call;
     private ApiClient apiClient = null;
-    private List<MovieResult> upcomingMovies;
+    private List<MovieResult> upcomingMovies = new ArrayList<>();
 
     @BindView(R.id.rv_upcoming)
     RecyclerView rvUpcoming;
@@ -69,10 +72,14 @@ public class UpcomingFragment extends Fragment {
         region = Locale.getDefault().getCountry();
 
         progressBar.setVisibility(View.VISIBLE);
-
         rvUpcoming.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        getUpcomingMovies();
+        if (savedInstanceState != null) {
+            upcomingMovies = savedInstanceState.getParcelableArrayList("movies");
+            prepareView();
+        } else {
+            getUpcomingMovies();
+        }
 
         ItemClickSupport.addTo(rvUpcoming).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
@@ -83,6 +90,18 @@ public class UpcomingFragment extends Fragment {
 
         return view;
     }
+
+    @Override public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("movies", new ArrayList<>(adapter.getMovies()));
+    }
+
+    private void prepareView() {
+        progressBar.setVisibility(View.GONE);
+        adapter = new RecyclerUpcomingAdapter(getActivity(), upcomingMovies);
+        rvUpcoming.setAdapter(adapter);
+    }
+
 
     private void getUpcomingMovies() {
 

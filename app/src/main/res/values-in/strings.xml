@@ -47,4 +47,22 @@
     <string name="share">Berbagi</string>
     <string name="share_using">Berbagi dengan</string>
 
+    <string name="favourite_list">Daftar Favorit</string>
+    <string name="empty_text">DATA KOSONG</string>
+
+    <string name="release_notification1">Hari ini</string>
+    <string name="release_notification2">rilis</string>
+    <string name="repeat_notif">Katalog Film Dicoding merindukanmu&#8230;</string>
+
+    <string name="preferences_title_1">Ubah Bahasa</string>
+    <string name="preferences_summary_1">Tekan untuk mengubah bahasa</string>
+    <string name="preferences_summary_2">Matikan atau Aktifkan fitur ini</string>
+    <string name="preferences_title_2">Reminder Harian</string>
+    <string name="preferences_title_3">Reminder Rilis</string>
+    <string name="preferences_summary_3">Memberi Anda notifikasi film yang baru dirilis</string>
+    <string name="Language">Bahasa</string>
+    <string name="Notifications">Pemberitahuan</string>
+
+    <string name="setting">Pengaturan</string>
+
 </resources>

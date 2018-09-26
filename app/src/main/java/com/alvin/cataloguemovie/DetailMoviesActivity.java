@@ -2,6 +2,7 @@ package com.alvin.cataloguemovie;
 
 import android.app.ProgressDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -25,6 +26,7 @@ import android.widget.Toast;
 import com.alvin.cataloguemovie.Database.DatabaseContract;
 import com.alvin.cataloguemovie.Retrofit.ApiClient;
 import com.alvin.cataloguemovie.Entity.Detail.DetailMovie;
+import com.alvin.cataloguemovie.widget.ImageBannerWidget;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -370,6 +372,8 @@ public class DetailMoviesActivity extends AppCompatActivity implements View.OnCl
 
             getContentResolver().insert(CONTENT_URI, values);
 
+            sendUpdateFavoriteList(this);
+
             Toast.makeText(this, R.string.add_favourite, Toast.LENGTH_SHORT).show();
 
 
@@ -380,6 +384,8 @@ public class DetailMoviesActivity extends AppCompatActivity implements View.OnCl
             getContentResolver().delete(Uri.parse(CONTENT_URI + "/" + movie_id),
                     null,
                     null);
+
+            sendUpdateFavoriteList(this);
 
             Toast.makeText(this, R.string.remove_favourite, Toast.LENGTH_SHORT).show();
         }
@@ -431,6 +437,13 @@ public class DetailMoviesActivity extends AppCompatActivity implements View.OnCl
             startActivity(Intent.createChooser(shareIntent, getResources().getString(R.string.share_using)));
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public static void sendUpdateFavoriteList(Context context)
+    {
+        Intent i = new Intent(context, ImageBannerWidget.class);
+        i.setAction(ImageBannerWidget.UPDATE_WIDGET);
+        context.sendBroadcast(i);
     }
 
 }

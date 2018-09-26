@@ -134,6 +134,10 @@ public class RecyclerSearchAdapter extends RecyclerView.Adapter<RecyclerSearchAd
         mContext.startActivity(movieIdIntent);
     }
 
+    public List<MovieResult> getMovies(){
+        return  searchMovieResults;
+    }
+
 }
 
 

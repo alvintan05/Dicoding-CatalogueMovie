@@ -23,6 +23,10 @@
     <item android:title="@string/settings">
         <menu>
             <item
+                android:id="@+id/nav_setting"
+                android:icon="@drawable/ic_settings_grey_500_24dp"
+                android:title="@string/setting"/>
+            <item
                 android:id="@+id/nav_change_language"
                 android:icon="@drawable/ic_translate_grey_500_24dp"
                 android:title="@string/change_language" />
