@@ -1,11 +1,14 @@
 package com.alvin.cataloguemovie.Entity.Detail;
 
 import android.database.Cursor;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.alvin.cataloguemovie.Database.DatabaseContract;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.alvin.cataloguemovie.Database.DatabaseContract.getColumnDouble;
@@ -20,7 +23,7 @@ import static com.alvin.cataloguemovie.Database.DatabaseContract.getColumnString
  * Created by Alvin Tandiardi on 02/08/2018.
  */
 
-public class DetailMovie {
+public class DetailMovie implements Parcelable {
 
     @SerializedName("adult")
     @Expose
@@ -297,4 +300,70 @@ public class DetailMovie {
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.adult);
+        dest.writeString(this.backdropPath);
+        dest.writeValue(this.budget);
+        dest.writeString(this.homepage);
+        dest.writeValue(this.id);
+        dest.writeString(this.imdbId);
+        dest.writeString(this.originalLanguage);
+        dest.writeString(this.originalTitle);
+        dest.writeString(this.overview);
+        dest.writeValue(this.popularity);
+        dest.writeString(this.posterPath);
+        dest.writeString(this.releaseDate);
+        dest.writeValue(this.revenue);
+        dest.writeValue(this.runtime);
+        dest.writeList(this.spokenLanguages);
+        dest.writeString(this.status);
+        dest.writeString(this.tagline);
+        dest.writeString(this.title);
+        dest.writeValue(this.video);
+        dest.writeValue(this.voteAverage);
+        dest.writeValue(this.voteCount);
+    }
+
+    protected DetailMovie(Parcel in) {
+        this.adult = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.backdropPath = in.readString();
+        this.budget = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.homepage = in.readString();
+        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.imdbId = in.readString();
+        this.originalLanguage = in.readString();
+        this.originalTitle = in.readString();
+        this.overview = in.readString();
+        this.popularity = (Double) in.readValue(Double.class.getClassLoader());
+        this.posterPath = in.readString();
+        this.releaseDate = in.readString();
+        this.revenue = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.runtime = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.spokenLanguages = new ArrayList<SpokenLanguage>();
+        in.readList(this.spokenLanguages, SpokenLanguage.class.getClassLoader());
+        this.status = in.readString();
+        this.tagline = in.readString();
+        this.title = in.readString();
+        this.video = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.voteAverage = (Double) in.readValue(Double.class.getClassLoader());
+        this.voteCount = (Integer) in.readValue(Integer.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<DetailMovie> CREATOR = new Parcelable.Creator<DetailMovie>() {
+        @Override
+        public DetailMovie createFromParcel(Parcel source) {
+            return new DetailMovie(source);
+        }
+
+        @Override
+        public DetailMovie[] newArray(int size) {
+            return new DetailMovie[size];
+        }
+    };
 }

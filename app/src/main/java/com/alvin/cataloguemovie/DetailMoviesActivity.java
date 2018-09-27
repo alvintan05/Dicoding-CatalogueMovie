@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import android.widget.ShareActionProvider;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alvin.cataloguemovie.Adapter.RecyclerNowPlayingAdapter;
 import com.alvin.cataloguemovie.Database.DatabaseContract;
 import com.alvin.cataloguemovie.Retrofit.ApiClient;
 import com.alvin.cataloguemovie.Entity.Detail.DetailMovie;
@@ -33,6 +35,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import butterknife.BindView;
@@ -69,6 +72,7 @@ public class DetailMoviesActivity extends AppCompatActivity implements View.OnCl
     private int mutedColor = R.attr.colorPrimary;
     private boolean favourite;
     private String movie_url;
+    private String check;
 
     private ProgressDialog mProgress;
     private ApiClient apiClient = null;
@@ -139,14 +143,30 @@ public class DetailMoviesActivity extends AppCompatActivity implements View.OnCl
         if (getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         movie_id = getIntent().getIntExtra(MOVIE_ID, movie_id);
-        String check = getIntent().getStringExtra(LOCAL_STATUS);
+        check = getIntent().getStringExtra(LOCAL_STATUS);
         movie_url = TMDB_URL + "" + movie_id;
+
+        if (savedInstanceState != null) {
+            detailMovie = savedInstanceState.getParcelable("movies");
+            checkAgain();
+        } else {
+            checkStatus();
+        }
 
         icFavoriteUnclicked.setOnClickListener(this);
         icFavoriteClicked.setOnClickListener(this);
 
         ctl.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
 
+        loadSqliteData();
+    }
+
+    @Override public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable("movies", detailMovie);
+    }
+
+    private void checkStatus() {
         if (check.equals("1")) {
             Log.d(TAG, "onCreate: sama cuy");
             getMovieSqlite();
@@ -155,8 +175,17 @@ public class DetailMoviesActivity extends AppCompatActivity implements View.OnCl
             Log.d(TAG, "onCreate: gak sama cuy");
             getDetailMovie();
         }
+    }
 
-        loadSqliteData();
+    private void checkAgain(){
+        if (check.equals("1")) {
+            Log.d(TAG, "onCreate: sama cuy");
+            getMovieSqlite();
+        }
+        if (check.equals("0")) {
+            Log.d(TAG, "onCreate: gak sama cuy");
+            setMovie();
+        }
     }
 
     private void getDetailMovie() {
@@ -241,6 +270,69 @@ public class DetailMoviesActivity extends AppCompatActivity implements View.OnCl
                 Toast.makeText(DetailMoviesActivity.this, R.string.toast_failed, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void setMovie(){
+        mProgress.dismiss();
+
+        String poster_url = IMAGE_BASE_URL + "w342" + detailMovie.getPosterPath();
+        String backdrop_url = IMAGE_BASE_URL + "w780" + detailMovie.getBackdropPath();
+
+        movieTitleBig.setText(detailMovie.getTitle());
+        movieYear.setText(detailMovie.getReleaseDate().split("-")[0]);
+
+        //buat set apabila taglinenya kosong
+        if (!detailMovie.getTagline().isEmpty()) {
+            movieTagline.setText("\"" + detailMovie.getTagline() + "\"");
+        } else {
+            movieTagline.setText(R.string.no_tagline);
+        }
+
+        movieRate.setText(detailMovie.getVoteAverage().toString());
+        movieReleaseStatus.setText(detailMovie.getStatus());
+        movieReleaseDate.setText(dateFormat(detailMovie.getReleaseDate()));
+        movieRuntime.setText(detailMovie.getRuntime() + getString(R.string.minute));
+        movieOverview.setText(detailMovie.getOverview());
+        movieLanguage.setText(detailMovie.getOriginalLanguage());
+        movieHomepage.setText(detailMovie.getHomepage());
+
+        Glide.with(getApplicationContext())
+                .load(poster_url)
+                .placeholder(R.drawable.example)
+                .error(R.drawable.example)
+                .crossFade()
+                .into(imgPoster);
+
+        Glide.with(getApplicationContext())
+                .load(backdrop_url)
+                .placeholder(R.drawable.example_backdrop)
+                .error(R.drawable.example_backdrop)
+                .crossFade()
+                .into(imgBackdrop);
+
+        //set title toolbar sesuai judul
+        ctl.setTitle(detailMovie.getTitle());
+
+        // mengubah gambar poster menjadi bitmap
+        int myWidth = 600;
+        int myHeight = 900;
+
+        Glide.with(getApplicationContext())
+                .load(poster_url)
+                .asBitmap()
+                .into(new SimpleTarget<Bitmap>(myWidth, myHeight) {
+                    @Override
+                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                        // mengekstrak warna dari gambar yang digunakan
+                        Palette.from(resource).generate(new Palette.PaletteAsyncListener() {
+                            @Override
+                            public void onGenerated(Palette palette) {
+                                mutedColor = palette.getMutedColor(R.attr.colorPrimary);
+                                ctl.setContentScrimColor(mutedColor);
+                            }
+                        });
+                    }
+                });
     }
 
     private void getMovieSqlite() {
