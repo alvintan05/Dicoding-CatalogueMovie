@@ -14,4 +14,5 @@ Memiliki fitur :
 12. Keep data saat orientation change
 
 Semua data film diambil dari API themoviedb.org.
+
 Projek untuk kelas Menjadi Android Developer Expert (MADE)
