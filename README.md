@@ -1,7 +1,7 @@
 <h1 align="center">
 Movie Catalogue
 </h1>
-This is my submission progress at Dicoding online course at class Belajar Fundamental Aplikasi Android (BFAA). I've enrolled in this class as part of Faculty Development Program from Dicoding (2018).
+This is my submission progress at Dicoding online course at class Belajar Fundamental Aplikasi Android (BFAA) www.dicoding.com/academies/14 . I've enrolled in this class as part of Faculty Development Program from Dicoding (2018).
 
 ## Screenshots
 
