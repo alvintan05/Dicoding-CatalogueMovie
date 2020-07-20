@@ -3,6 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/CatalogueMovie.iml" filepath="$PROJECT_DIR$/CatalogueMovie.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Dicoding-CatalogueMovie.iml" filepath="$PROJECT_DIR$/Dicoding-CatalogueMovie.iml" group="Dicoding-CatalogueMovie" />
+      <module fileurl="file://$PROJECT_DIR$/app/Dicoding-CatalogueMovie-app.iml" filepath="$PROJECT_DIR$/app/Dicoding-CatalogueMovie-app.iml" group="Dicoding-CatalogueMovie/app" />
+      <module fileurl="file://$PROJECT_DIR$/favouritelistapp/Dicoding-CatalogueMovie-favouritelistapp.iml" filepath="$PROJECT_DIR$/favouritelistapp/Dicoding-CatalogueMovie-favouritelistapp.iml" group="Dicoding-CatalogueMovie/favouritelistapp" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/favouritelistapp/favouritelistapp.iml" filepath="$PROJECT_DIR$/favouritelistapp/favouritelistapp.iml" />
     </modules>
