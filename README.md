@@ -29,7 +29,6 @@ This is my submission progress at Dicoding online course at class Belajar Fundam
 10. Notification daily reminder.
 12. Keep data when orientation changed
 
-All data film diambil dari API themoviedb.org.
 API from : <a href="https://www.themoviedb.org/" title="TheMovieDB">TheMovieDB</a>
 
 ## Tech Stack
