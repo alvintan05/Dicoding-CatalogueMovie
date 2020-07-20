@@ -35,3 +35,9 @@ API from : <a href="https://www.themoviedb.org/" title="TheMovieDB">TheMovieDB</
 - [x] Java
 - [x] SQLite
 - [x] Retrofit
+
+## Apps
+<a href="https://drive.google.com/drive/folders/1GqkpqDCZLvTjL6sLMnKmlbM6qULiNTE5?usp=sharing" title="Movie Catalogue Apps">Download Here</a>
+
+## Author
+* **Alvin Tandiardi**
