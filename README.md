@@ -40,4 +40,5 @@ API from : <a href="https://www.themoviedb.org/" title="TheMovieDB">TheMovieDB</
 <a href="https://drive.google.com/drive/folders/1GqkpqDCZLvTjL6sLMnKmlbM6qULiNTE5?usp=sharing" title="Movie Catalogue Apps">Download Here</a>
 
 ## Author
-* **Alvin Tandiardi**
+| [<img src="https://avatars1.githubusercontent.com/u/32356015?v=3" width="100px;"/><br /><sub><b>Alvin Tandiardi</b></sub>](https://github.com/alvintan05)<br /> |
+| :-----------------------------------------------------------------------------------------------------------------------------------------------------------------: |
